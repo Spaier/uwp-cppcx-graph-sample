@@ -30,18 +30,15 @@ MainPage::MainPage()
 	vertices = ref new Platform::Collections::Vector<Vertice^>();
 }
 
-
 void VsuCpp4::MainPage::OnNew(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 
 }
 
-
 void VsuCpp4::MainPage::OnOpen(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 
 }
-
 
 void VsuCpp4::MainPage::OnSave(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
@@ -58,15 +55,14 @@ void VsuCpp4::MainPage::OnAddEdge(Platform::Object^ sender, Windows::UI::Xaml::R
 
 }
 
-
 void VsuCpp4::MainPage::OnAddVertice(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-
+	vertices->Append(ref new Vertice(NewVerticeX, NewVerticeY, NewVerticeValue));
 }
 
 void VsuCpp4::MainPage::OnClear(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-
+	vertices->Clear();
 }
 
 void VsuCpp4::MainPage::OnRemoveVertice(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)

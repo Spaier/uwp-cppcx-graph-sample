@@ -30,12 +30,12 @@
             <TextBox Text="{x:Bind NewVerticeValue}"></TextBox>
             <Button Click="OnAddVertice">Add New Vertice</Button>
             <TextBlock>Vertice 1</TextBlock>
-            <ComboBox></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}"></ComboBox>
             <TextBlock>Vertice 2</TextBlock>
-            <ComboBox></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}"></ComboBox>
             <Button Click="OnAddEdge">Add New Edge</Button>
             <TextBlock>Vertice</TextBlock>
-            <ComboBox></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}"></ComboBox>
             <Button Click="OnRemoveVertice">Remove Vertice</Button>
             <TextBlock>Edge</TextBlock>
             <ComboBox></ComboBox>
