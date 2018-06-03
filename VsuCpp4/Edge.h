@@ -9,7 +9,7 @@ namespace VsuCpp4
 	public:
 		property Vertice^ Vertice1;
 		property Vertice^ Vertice2;
-		property Platform::String^ Value
+		property Platform::String^ Value 
 		{
 			Platform::String^ get();
 		}

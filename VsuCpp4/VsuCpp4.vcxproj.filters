@@ -18,6 +18,7 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Vertice.cpp" />
     <ClCompile Include="Edge.cpp" />
+    <ClCompile Include="RelayCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="Vertice.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="RelayCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

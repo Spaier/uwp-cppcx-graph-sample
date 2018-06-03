@@ -145,6 +145,7 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="RelayCommand.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Vertice.h" />
   </ItemGroup>
@@ -184,6 +185,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RelayCommand.cpp" />
     <ClCompile Include="Vertice.cpp" />
   </ItemGroup>
   <ItemGroup>

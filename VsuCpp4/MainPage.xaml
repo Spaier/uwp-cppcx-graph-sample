@@ -8,6 +8,14 @@
     mc:Ignorable="d"
     RequestedTheme="Dark"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <DataTemplate x:Key="VerticeComboBoxItem" x:DataType="local:Vertice">
+            <TextBlock Text="{x:Bind Value}"></TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="EdgeComboBoxItem" x:DataType="local:Edge">
+            <TextBlock Text="{x:Bind Value}"></TextBlock>
+        </DataTemplate>
+    </Page.Resources>
     <Page.TopAppBar>
         <CommandBar>
             <AppBarButton Click="OnNew">New</AppBarButton>
@@ -30,15 +38,17 @@
             <TextBox Text="{x:Bind NewVerticeValue, Mode=TwoWay}"></TextBox>
             <Button Click="OnAddVertice">Add New Vertice</Button>
             <TextBlock>Vertice 1</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}" DisplayMemberPath="X"></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}" SelectedValue="{x:Bind NewEdgeVertice1, Mode=TwoWay}"
+                      ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
             <TextBlock>Vertice 2</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}" DisplayMemberPath="X"></ComboBox>
-            <Button Click="OnAddEdge">Add New Edge</Button>
+            <ComboBox ItemsSource="{x:Bind Vertices}" SelectedValue="{x:Bind NewEdgeVertice2, Mode=TwoWay}"
+                      ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
+            <Button Click="OnAddEdge" Command="{x:Bind AddEdgeCommand}">Add New Edge</Button>
             <TextBlock>Vertice</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}" DisplayMemberPath="X"></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}" ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
             <Button Click="OnRemoveVertice">Remove Vertice</Button>
             <TextBlock>Edge</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Edges}" DisplayMemberPath="Value"></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Edges}" ItemTemplate="{StaticResource EdgeComboBoxItem}"></ComboBox>
             <Button Click="OnRemoveEdge">Remove Edge</Button>
             <Button Click="OnClear">Clear</Button>
         </StackPanel>
