@@ -56,9 +56,9 @@
                             <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}"></TranslateTransform>
                         </Border.RenderTransform>
                         <Grid>
-                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                            <TextBlock HorizontalTextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    Foreground="RoyalBlue" FontWeight="SemiBold" FontSize="30"
-                                   Text="{x:Bind Value}"></TextBlock>
+                                   Text="{x:Bind Value}" FontFamily="Algerian"></TextBlock>
                         </Grid>
                     </Border>
                 </DataTemplate>
