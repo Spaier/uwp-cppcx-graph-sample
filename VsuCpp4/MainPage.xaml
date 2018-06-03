@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     RequestedTheme="Dark"
+    DataContext="{x:Bind ViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <DataTemplate x:Key="VerticeComboBoxItem" x:DataType="local:Vertice">
@@ -15,13 +16,14 @@
         <DataTemplate x:Key="EdgeComboBoxItem" x:DataType="local:Edge">
             <TextBlock Text="{x:Bind Value}"></TextBlock>
         </DataTemplate>
+        <x:String x:Key="VerticeDiameter">140</x:String>
+        <x:String x:Key="EdgeIgnoreRadius">70</x:String>
     </Page.Resources>
     <Page.TopAppBar>
         <CommandBar>
-            <AppBarButton Click="OnNew">New</AppBarButton>
-            <AppBarButton Click="OnOpen">Open</AppBarButton>
-            <AppBarButton Click="OnSave">Save</AppBarButton>
-            <AppBarButton Click="OnSaveAs">Save As</AppBarButton>
+            <AppBarButton>Open</AppBarButton>
+            <AppBarButton>Save</AppBarButton>
+            <AppBarButton>Save As</AppBarButton>
         </CommandBar>
     </Page.TopAppBar>
     <Grid>
@@ -31,28 +33,36 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="1">
             <TextBlock>X</TextBlock>
-            <TextBox TextChanging="OnTextToDouble" Text="{x:Bind NewVerticeX, Mode=TwoWay}"></TextBox>
+            <TextBox Text="{x:Bind ViewModel.NewVerticeX, Mode=TwoWay}" TextChanging="OnTextToDouble"></TextBox>
             <TextBlock>Y</TextBlock>
-            <TextBox TextChanging="OnTextToDouble" Text="{x:Bind NewVerticeY, Mode=TwoWay}"></TextBox>
+            <TextBox Text="{x:Bind ViewModel.NewVerticeY, Mode=TwoWay}" TextChanging="OnTextToDouble"></TextBox>
             <TextBlock>Value</TextBlock>
-            <TextBox Text="{x:Bind NewVerticeValue, Mode=TwoWay}"></TextBox>
-            <Button Click="OnAddVertice">Add New Vertice</Button>
+            <TextBox Text="{x:Bind ViewModel.NewVerticeValue, Mode=TwoWay}"></TextBox>
+            <Button Command="{x:Bind ViewModel.AddVerticeCommand}">Add New Vertice</Button>
             <TextBlock>Vertice 1</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}" SelectedValue="{x:Bind NewEdgeVertice1, Mode=TwoWay}"
+            <ComboBox ItemsSource="{x:Bind ViewModel.Vertices}"
+                      SelectedItem="{x:Bind ViewModel.NewEdgeVertice1, Mode=TwoWay}"
                       ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
             <TextBlock>Vertice 2</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}" SelectedValue="{x:Bind NewEdgeVertice2, Mode=TwoWay}"
+            <ComboBox ItemsSource="{x:Bind ViewModel.Vertices}"
+                      SelectedItem="{x:Bind ViewModel.NewEdgeVertice2, Mode=TwoWay}"
                       ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
-            <Button Click="OnAddEdge" Command="{x:Bind AddEdgeCommand}">Add New Edge</Button>
+            <TextBlock>Weight</TextBlock>
+            <TextBox Text="{x:Bind ViewModel.NewEdgeWeight, Mode=TwoWay}" TextChanging="OnTextToDouble"></TextBox>
+            <Button Command="{x:Bind ViewModel.AddEdgeCommand}">Add New Edge</Button>
             <TextBlock>Vertice</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}" ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
-            <Button Click="OnRemoveVertice">Remove Vertice</Button>
+            <ComboBox ItemsSource="{x:Bind ViewModel.Vertices}"
+                      SelectedItem="{x:Bind ViewModel.VerticeToRemove, Mode=TwoWay}"
+                      ItemTemplate="{StaticResource VerticeComboBoxItem}"></ComboBox>
+            <Button Command="{x:Bind ViewModel.RemoveVerticeCommand}">Remove Vertice</Button>
             <TextBlock>Edge</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Edges}" ItemTemplate="{StaticResource EdgeComboBoxItem}"></ComboBox>
-            <Button Click="OnRemoveEdge">Remove Edge</Button>
-            <Button Click="OnClear">Clear</Button>
+            <ComboBox ItemsSource="{x:Bind ViewModel.Edges}"
+                      SelectedItem="{x:Bind ViewModel.EdgeToRemove, Mode=TwoWay}"
+                      ItemTemplate="{StaticResource EdgeComboBoxItem}"></ComboBox>
+            <Button Command="{x:Bind ViewModel.RemoveEdgeCommand}">Remove Edge</Button>
+            <Button Command="{x:Bind ViewModel.ClearCommand}">Clear</Button>
         </StackPanel>
-        <ItemsControl ItemsSource="{x:Bind Vertices}">
+        <ItemsControl ItemsSource="{x:Bind ViewModel.Vertices}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas></Canvas>
@@ -61,7 +71,9 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="local:Vertice">
                     <Border BorderThickness="5" BorderBrush="OrangeRed"
-                            Background="Lime" CornerRadius="140" Width="140" Height="140">
+                            Background="Lime"
+                            CornerRadius="{StaticResource VerticeDiameter}" Width="{StaticResource VerticeDiameter}"
+                            Height="{StaticResource VerticeDiameter}">
                         <Border.RenderTransform>
                             <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}"></TranslateTransform>
                         </Border.RenderTransform>
@@ -71,6 +83,38 @@
                                    Text="{x:Bind Value}" FontFamily="Algerian"></TextBlock>
                         </Grid>
                     </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{x:Bind ViewModel.Edges}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas></Canvas>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="local:Edge">
+                    <Grid>
+                        <TextBlock Text="{x:Bind Weight}" TextAlignment="Center"
+                                   FontSize="20" Foreground="NavajoWhite"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform 
+                                    X="{StaticResource VerticeDiameter}" Y="{StaticResource VerticeDiameter}">
+                                </TranslateTransform>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                        <Line Name="line" Stroke="LimeGreen" StrokeThickness="5"
+                              Opacity="0.5"
+                              X1="{x:Bind Vertice1.X}" Y1="{x:Bind Vertice1.Y}"
+                              X2="{x:Bind Vertice2.X}" Y2="{x:Bind Vertice2.Y}">
+                            <Line.RenderTransform>
+                                <TranslateTransform 
+                                    X="{StaticResource EdgeIgnoreRadius}" Y="{StaticResource EdgeIgnoreRadius}">
+                                </TranslateTransform>
+                            </Line.RenderTransform>
+                        </Line>
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

@@ -8,6 +8,10 @@
 #include <ppltasks.h>
 
 #include "App.xaml.h"
+#include "MainViewModel.h"
+#include "RelayCommand.h"
+#include "Edge.h"
+#include "Vertice.h"
 
 #include <assert.h>
 #include <functional>
