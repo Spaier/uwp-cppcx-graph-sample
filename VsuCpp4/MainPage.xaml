@@ -23,43 +23,46 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="1">
             <TextBlock>X</TextBlock>
-            <TextBox Text="{x:Bind NewVerticeX}"></TextBox>
+            <TextBox TextChanging="OnTextToDouble" Text="{x:Bind NewVerticeX, Mode=TwoWay}"></TextBox>
             <TextBlock>Y</TextBlock>
-            <TextBox Text="{x:Bind NewVerticeY}"></TextBox>
-            <TextBlock>Z</TextBlock>
-            <TextBox Text="{x:Bind NewVerticeValue}"></TextBox>
+            <TextBox TextChanging="OnTextToDouble" Text="{x:Bind NewVerticeY, Mode=TwoWay}"></TextBox>
+            <TextBlock>Value</TextBlock>
+            <TextBox Text="{x:Bind NewVerticeValue, Mode=TwoWay}"></TextBox>
             <Button Click="OnAddVertice">Add New Vertice</Button>
             <TextBlock>Vertice 1</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}"></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}" DisplayMemberPath="X"></ComboBox>
             <TextBlock>Vertice 2</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}"></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}" DisplayMemberPath="X"></ComboBox>
             <Button Click="OnAddEdge">Add New Edge</Button>
             <TextBlock>Vertice</TextBlock>
-            <ComboBox ItemsSource="{x:Bind Vertices}"></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Vertices}" DisplayMemberPath="X"></ComboBox>
             <Button Click="OnRemoveVertice">Remove Vertice</Button>
             <TextBlock>Edge</TextBlock>
-            <ComboBox></ComboBox>
+            <ComboBox ItemsSource="{x:Bind Edges}" DisplayMemberPath="Value"></ComboBox>
             <Button Click="OnRemoveEdge">Remove Edge</Button>
             <Button Click="OnClear">Clear</Button>
         </StackPanel>
-        <ItemsControl>
-            <ItemsControl.Resources>
-                <DataTemplate x:DataType="local:Vertice" x:Key="verticeStyle">
-                    <Border BorderThickness="5" BorderBrush="OrangeRed"
-                            Background="Lime" CornerRadius="100" Width="100" Height="100">
-                        <Border.RenderTransform>
-                            <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}"></TranslateTransform>
-                        </Border.RenderTransform>
-                        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                   Text="{x:Bind Value}"></TextBlock>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.Resources>
+        <ItemsControl ItemsSource="{x:Bind Vertices}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas></Canvas>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="local:Vertice">
+                    <Border BorderThickness="5" BorderBrush="OrangeRed"
+                            Background="Lime" CornerRadius="140" Width="140" Height="140">
+                        <Border.RenderTransform>
+                            <TranslateTransform X="{x:Bind X}" Y="{x:Bind Y}"></TranslateTransform>
+                        </Border.RenderTransform>
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   Foreground="RoyalBlue" FontWeight="SemiBold" FontSize="30"
+                                   Text="{x:Bind Value}"></TextBlock>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
 </Page>

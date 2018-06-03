@@ -2,7 +2,6 @@
 
 namespace VsuCpp4
 {
-	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class Vertice sealed
 	{
 	public:

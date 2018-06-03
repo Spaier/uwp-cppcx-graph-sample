@@ -7,6 +7,7 @@
 
 #include "MainPage.g.h"
 #include "Vertice.h"
+#include "Edge.h"
 
 namespace VsuCpp4
 {
@@ -18,9 +19,13 @@ namespace VsuCpp4
 	{
 	private:
 		Windows::Foundation::Collections::IObservableVector<Vertice^>^ vertices;
+		Windows::Foundation::Collections::IObservableVector<Edge^>^ edges;
 	public:
 		property Windows::Foundation::Collections::IObservableVector<Vertice^>^ Vertices {
 			Windows::Foundation::Collections::IObservableVector<Vertice^>^ get();
+		}
+		property Windows::Foundation::Collections::IObservableVector<Edge^>^ Edges {
+			Windows::Foundation::Collections::IObservableVector<Edge^>^ get();
 		}
 		property double NewVerticeX;
 		property double NewVerticeY;
@@ -36,5 +41,6 @@ namespace VsuCpp4
 		void OnClear(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void OnRemoveVertice(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void OnRemoveEdge(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void OnTextToDouble(Windows::UI::Xaml::Controls::TextBox^ sender, Windows::UI::Xaml::Controls::TextBoxTextChangingEventArgs^ args);
 	};
 }

@@ -17,6 +17,7 @@
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Vertice.cpp" />
+    <ClCompile Include="Edge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -24,6 +25,7 @@
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="Vertice.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Edge.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
