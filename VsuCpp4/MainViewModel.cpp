@@ -41,4 +41,16 @@ MainViewModel::MainViewModel()
 		ref new ExecuteDelegate(this, &MainViewModel::OnClear),
 		nullptr
 	);
+	OpenCommand = ref new RelayCommand(
+		ref new ExecuteDelegate(this, &MainViewModel::OnOpen),
+		nullptr
+	);
+	SaveCommand = ref new RelayCommand(
+		ref new ExecuteDelegate(this, &MainViewModel::OnSave),
+		ref new CanExecuteDelegate(this, &MainViewModel::CanSave)
+	);
+	SaveAsCommand = ref new RelayCommand(
+		ref new ExecuteDelegate(this, &MainViewModel::OnSaveAs),
+		nullptr
+	);
 }

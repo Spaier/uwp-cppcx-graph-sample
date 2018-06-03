@@ -160,7 +160,19 @@ namespace VsuCpp4
 		}
 		void OnOpen(Platform::Object^ parameter)
 		{
-			
+			// file = ...
+		}
+		bool CanSave(Platform::Object^ parameter)
+		{
+			// file != null
+		}
+		void OnSave(Platform::Object^ parameter)
+		{
+
+		}
+		void OnSaveAs(Platform::Object^ parameter)
+		{
+
 		}
 		// INotifyPropertyChanged
 		template <typename T> void Set(T const& field, T const& value, Platform::String^ propertyName)
