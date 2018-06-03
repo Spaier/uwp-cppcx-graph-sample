@@ -1,6 +1,6 @@
 ﻿//
 // MainPage.xaml.cpp
-// Implementation of the MainPage class.
+// Implementation of the MainPage class
 //
 
 #include "pch.h"
@@ -19,9 +19,62 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+Windows::Foundation::Collections::IObservableVector<Vertice^>^ MainPage::Vertices::get()
+{
+	return vertices;
+}
 
 MainPage::MainPage()
 {
 	InitializeComponent();
+	vertices = ref new Platform::Collections::Vector<Vertice^>();
+}
+
+
+void VsuCpp4::MainPage::OnNew(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+
+void VsuCpp4::MainPage::OnOpen(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+
+void VsuCpp4::MainPage::OnSave(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+void VsuCpp4::MainPage::OnSaveAs(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+void VsuCpp4::MainPage::OnAddEdge(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+
+void VsuCpp4::MainPage::OnAddVertice(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+void VsuCpp4::MainPage::OnClear(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+void VsuCpp4::MainPage::OnRemoveVertice(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
+}
+
+void VsuCpp4::MainPage::OnRemoveEdge(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+
 }
