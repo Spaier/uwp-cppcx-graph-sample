@@ -3,14 +3,16 @@
 namespace VsuCpp4
 {
 	using namespace Windows::UI::Xaml::Interop;
-	public ref class BoolToColorConverter sealed : Windows::UI::Xaml::Data::IValueConverter
+	using namespace Windows::UI::Xaml::Data;
+	using namespace Platform;
+	public ref class BoolToColorConverter sealed : IValueConverter
 	{
 	public:
 		BoolToColorConverter();
 
 		// Inherited via IValueConverter
-		virtual Platform::Object ^ Convert(Platform::Object ^value, TypeName targetType, Platform::Object ^parameter, Platform::String ^language);
-		virtual Platform::Object ^ ConvertBack(Platform::Object ^value, TypeName targetType, Platform::Object ^parameter, Platform::String ^language);
+		virtual Platform::Object ^ Convert(Object ^value, TypeName targetType, Object ^parameter, String ^language);
+		virtual Platform::Object ^ ConvertBack(Object ^value, TypeName targetType, Object ^parameter, String ^language);
 	};
 }
 

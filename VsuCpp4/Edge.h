@@ -4,6 +4,7 @@
 
 namespace VsuCpp4
 {
+	using namespace Platform;
 	public ref class Edge sealed
 	{
 	public:
@@ -11,9 +12,9 @@ namespace VsuCpp4
 		property Vertice^ Vertice2;
 		property double Weight;
 		property bool IsMst;
-		property Platform::String^ Value 
+		property String^ Value 
 		{
-			Platform::String^ get();
+			String^ get();
 		}
 		Edge(Vertice^ vertice1, Vertice^ vertice2, double weight);
 	};

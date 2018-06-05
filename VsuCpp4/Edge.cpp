@@ -2,8 +2,9 @@
 #include "Edge.h"
 
 using namespace VsuCpp4;
+using namespace Platform;
 
-Platform::String^ Edge::Value::get()
+String^ Edge::Value::get()
 {
 	return Vertice1->Value + Vertice2->Value + Weight.ToString();
 }

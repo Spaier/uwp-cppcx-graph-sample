@@ -2,25 +2,25 @@
 #include "BoolToColorConverter.h"
 
 using namespace VsuCpp4;
+using namespace Platform;
+using namespace Windows::UI;
+using namespace Windows::UI::Xaml::Media;
 
-BoolToColorConverter::BoolToColorConverter()
-{
+BoolToColorConverter::BoolToColorConverter() { }
 
-}
-
-Platform::Object ^ BoolToColorConverter::Convert(Platform::Object ^value, TypeName targetType, Platform::Object ^parameter, Platform::String ^language)
+Object ^ BoolToColorConverter::Convert(Object ^value, TypeName targetType, Object ^parameter, String ^language)
 {
 	if (value->Equals(true))
 	{
-		return ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Violet);
+		return ref new SolidColorBrush(Colors::Violet);
 	}
 	else
 	{
-		return ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Red);
+		return ref new SolidColorBrush(Colors::Red);
 	}
 }
 
-Platform::Object ^ BoolToColorConverter::ConvertBack(Platform::Object ^value, TypeName targetType, Platform::Object ^parameter, Platform::String ^language)
+Object ^ BoolToColorConverter::ConvertBack(Object ^value, TypeName targetType, Object ^parameter, String ^language)
 {
 	throw ref new Platform::NotImplementedException();
 }
