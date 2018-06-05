@@ -24,6 +24,6 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <Capabilities><uap:Capability Name="documentsLibrary"/></Capabilities>
+    <uap:Capability Name="documentsLibrary"/>
   </Capabilities>
 </Package>
