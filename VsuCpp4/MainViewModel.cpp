@@ -45,12 +45,45 @@ MainViewModel::MainViewModel()
 		ref new ExecuteDelegate(this, &MainViewModel::OnOpen),
 		nullptr
 	);
-	SaveCommand = ref new RelayCommand(
-		ref new ExecuteDelegate(this, &MainViewModel::OnSave),
-		ref new CanExecuteDelegate(this, &MainViewModel::CanSave)
-	);
 	SaveAsCommand = ref new RelayCommand(
 		ref new ExecuteDelegate(this, &MainViewModel::OnSaveAs),
 		nullptr
 	);
+}
+
+void MainViewModel::OnSaveAs(Platform::Object^ parameter)
+{
+	using namespace Windows::Storage;
+	auto picker = ref new Pickers::FileSavePicker();
+	auto extensions = ref new Platform::Collections::Vector<Platform::String^>();
+	extensions->Append(".vsu");
+	picker->SuggestedStartLocation = Pickers::PickerLocationId::DocumentsLibrary;
+	picker->SuggestedFileName = "graph";
+	picker->FileTypeChoices->Insert("App File", extensions);
+	auto pick_task = create_task(picker->PickSaveFileAsync());
+	pick_task.then([&](StorageFile^ file)
+	{
+		if (file != nullptr)
+		{
+			Windows::Storage::CachedFileManager::DeferUpdates(file);
+			wstringstream stream;
+			for (auto&& vertice : vertices)
+			{
+				stream << wstring(vertice->Value->Data()) << " " << vertice->X << " " << vertice->Y;
+				for (auto&& edge : edges)
+				{
+					if (edge->Vertice1 == vertice)
+					{
+						stream << " " << edge->Vertice2->Value->Data() << " " << edge->Vertice2->X << " " << edge->Vertice2->Y;
+					}
+				}
+				stream << endl;
+			}
+			Platform::String^ text = ref new Platform::String(stream.str().c_str());
+			auto write_task = create_task(Windows::Storage::FileIO::WriteTextAsync(file, text));
+			write_task.wait();
+			auto update_task = create_task(Windows::Storage::CachedFileManager::CompleteUpdatesAsync(file));
+			update_task.wait();
+		}
+	});
 }

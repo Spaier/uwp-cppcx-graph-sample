@@ -10,6 +10,7 @@ namespace VsuCpp4
 		property Vertice^ Vertice1;
 		property Vertice^ Vertice2;
 		property double Weight;
+		property bool IsMst;
 		property Platform::String^ Value 
 		{
 			Platform::String^ get();

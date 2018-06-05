@@ -20,6 +20,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="RelayCommand.cpp" />
     <ClCompile Include="MainViewModel.cpp" />
+    <ClCompile Include="BoolToColorConverter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="RelayCommand.h" />
     <ClInclude Include="MainViewModel.h" />
+    <ClInclude Include="BoolToColorConverter.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

@@ -18,12 +18,12 @@
         </DataTemplate>
         <x:String x:Key="VerticeDiameter">140</x:String>
         <x:String x:Key="EdgeIgnoreRadius">70</x:String>
+        <local:BoolToColorConverter x:Key="BoolToColorConverter"></local:BoolToColorConverter>
     </Page.Resources>
     <Page.TopAppBar>
         <CommandBar>
-            <AppBarButton>Open</AppBarButton>
-            <AppBarButton>Save</AppBarButton>
-            <AppBarButton>Save As</AppBarButton>
+            <AppBarButton Command="{x:Bind ViewModel.OpenCommand}">Open</AppBarButton>
+            <AppBarButton Command="{x:Bind ViewModel.SaveAsCommand}">Save As</AppBarButton>
         </CommandBar>
     </Page.TopAppBar>
     <Grid>
@@ -104,7 +104,7 @@
                                 </TranslateTransform>
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <Line Name="line" Stroke="LimeGreen" StrokeThickness="5"
+                        <Line Stroke="{x:Bind IsMst, Converter={StaticResource BoolToColorConverter}}" StrokeThickness="5"
                               Opacity="0.5"
                               X1="{x:Bind Vertice1.X}" Y1="{x:Bind Vertice1.Y}"
                               X2="{x:Bind Vertice2.X}" Y2="{x:Bind Vertice2.Y}">

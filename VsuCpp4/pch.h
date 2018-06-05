@@ -6,9 +6,13 @@
 
 #include <collection.h>
 #include <ppltasks.h>
+#include <experimental\resumable>
+#include <experimental\coroutine>
+#include <pplawait.h>
 
 #include "App.xaml.h"
 #include "MainViewModel.h"
+#include "BoolToColorConverter.h"
 #include "RelayCommand.h"
 #include "Edge.h"
 #include "Vertice.h"
