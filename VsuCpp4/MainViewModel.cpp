@@ -1,24 +1,29 @@
 #include "pch.h"
 #include "MainViewModel.h"
 
+using namespace Platform;
+using namespace Platform::Collections;
 using namespace VsuCpp4;
 using namespace VsuCpp4::Mvvm;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
+using namespace Windows::Storage;
+using namespace Windows::Storage::Pickers;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Controls::Primitives;
 using namespace Windows::UI::Xaml::Data;
 using namespace std;
+using namespace concurrency;
 
 // Constructors
 
 MainViewModel::MainViewModel()
 {
-	auto edges_vector = ref new Platform::Collections::Vector<Edge^>();
+	auto edges_vector = ref new Vector<Edge^>();
 	edges_vector->VectorChanged += ref new VectorChangedEventHandler<Edge^>(this, &MainViewModel::OnEdgeVectorChanged);
 	edges = edges_vector;
-	auto vertices_vector = ref new Platform::Collections::Vector<Vertice^>();
+	auto vertices_vector = ref new Vector<Vertice^>();
 	vertices_vector->VectorChanged += ref new VectorChangedEventHandler<Vertice^>(this, &MainViewModel::OnVerticeVectorChanged);
 	vertices = vertices_vector;
 	AddVerticeCommand = ref new RelayCommand(
@@ -49,41 +54,54 @@ MainViewModel::MainViewModel()
 		ref new ExecuteDelegate(this, &MainViewModel::OnSaveAs),
 		nullptr
 	);
+	max_vertice_id = 0;
 }
 
-void MainViewModel::OnSaveAs(Platform::Object^ parameter)
+task<void> MainViewModel::SaveGraphAsync()
 {
-	using namespace Windows::Storage;
-	auto picker = ref new Pickers::FileSavePicker();
-	auto extensions = ref new Platform::Collections::Vector<Platform::String^>();
+	auto picker = ref new FileSavePicker();
+	auto extensions = ref new Vector<String^>();
 	extensions->Append(".vsu");
-	picker->SuggestedStartLocation = Pickers::PickerLocationId::DocumentsLibrary;
+	picker->SuggestedStartLocation = PickerLocationId::DocumentsLibrary;
 	picker->SuggestedFileName = "graph";
 	picker->FileTypeChoices->Insert("App File", extensions);
-	auto pick_task = create_task(picker->PickSaveFileAsync());
-	pick_task.then([&](StorageFile^ file)
+	auto file = co_await picker->PickSaveFileAsync();
+	if (file == nullptr) return;
+	CachedFileManager::DeferUpdates(file);
+	wstringstream stream;
+	for (auto&& vertice : vertices)
 	{
-		if (file != nullptr)
+		stream << vertice->Id << wstring(vertice->Value->Data()) << " " << vertice->X << " " << vertice->Y;
+		for (auto&& edge : edges)
 		{
-			Windows::Storage::CachedFileManager::DeferUpdates(file);
-			wstringstream stream;
-			for (auto&& vertice : vertices)
+			if (edge->Vertice1 == vertice)
 			{
-				stream << wstring(vertice->Value->Data()) << " " << vertice->X << " " << vertice->Y;
-				for (auto&& edge : edges)
-				{
-					if (edge->Vertice1 == vertice)
-					{
-						stream << " " << edge->Vertice2->Value->Data() << " " << edge->Vertice2->X << " " << edge->Vertice2->Y;
-					}
-				}
-				stream << endl;
+				stream << " " << edge->Vertice2->Id;
 			}
-			Platform::String^ text = ref new Platform::String(stream.str().c_str());
-			auto write_task = create_task(Windows::Storage::FileIO::WriteTextAsync(file, text));
-			write_task.wait();
-			auto update_task = create_task(Windows::Storage::CachedFileManager::CompleteUpdatesAsync(file));
-			update_task.wait();
 		}
-	});
+		stream << endl;
+	}
+	String^ text = ref new String(stream.str().c_str());
+	co_await FileIO::WriteTextAsync(file, text);
+	auto update_status = co_await CachedFileManager::CompleteUpdatesAsync(file);
+}
+
+task<void> MainViewModel::LoadGraphAsync()
+{
+	auto picker = ref new FileOpenPicker();
+	picker->SuggestedStartLocation = PickerLocationId::DocumentsLibrary;
+	picker->FileTypeFilter->Append(".vsu");
+	auto file = co_await picker->PickSingleFileAsync();
+	if (file == nullptr) return;
+	auto lines = co_await FileIO::ReadLinesAsync(file);
+	for (auto&& line : lines)
+	{
+		wstringstream stream(line->Data());
+		unsigned long long vertice_id;
+		wstring vertice_value;
+		double vertice_x;
+		double vertice_y;
+		stream >> vertice_id >> vertice_value >> vertice_x >> vertice_y;
+		auto vertice = ref new Vertice(vertice_x, vertice_y, ref new String(vertice_value.c_str()), vertice_id);
+	}
 }

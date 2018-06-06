@@ -7,11 +7,14 @@
 namespace VsuCpp4
 {
 	using namespace Windows::Foundation::Collections;
+	using namespace Windows::UI::Xaml::Input;
 	using namespace VsuCpp4::Mvvm;
+	using namespace Platform;
+	using namespace Platform::Collections;
 	using namespace concurrency;
 	using namespace std;
 
-	template <typename T> static void RaiseCanExecuteChanged(Windows::UI::Xaml::Input::ICommand^ instance)
+	template <typename T> static void RaiseCanExecuteChanged(ICommand^ instance)
 	{
 		auto command = dynamic_cast<T^>(instance);
 		command->RaiseCanExecuteChanged();
@@ -22,6 +25,7 @@ namespace VsuCpp4
 	{
 	private:
 		// Fields
+		unsigned long long max_vertice_id;
 		IObservableVector<Edge^>^ edges;
 		IObservableVector<Vertice^>^ vertices;
 		Vertice^ newEdgeVertice1;
@@ -101,33 +105,31 @@ namespace VsuCpp4
 	private:
 		void OnMst()
 		{
-			auto vm_edge_vec = dynamic_cast<Platform::Collections::Vector<Edge^>^>(edges);
-			auto edge_vec = ref new Platform::Collections::Vector<Edge^>(begin(vm_edge_vec), end(vm_edge_vec));
+			auto vm_edge_vec = dynamic_cast<Vector<Edge^>^>(edges);
+			vector<Edge^> edge_vec(begin(vm_edge_vec), end(vm_edge_vec));
 			sort(begin(edge_vec), end(edge_vec), [](Edge^ e1, Edge^ e2)
 			{
 				return e1->Weight < e2->Weight;
 			});
-			auto vertice_ver = ref new Platform::Collections::Vector<Vertice^>();
-			for (unsigned int i = 0; i < edge_vec->Size; i++)
+			vector<Vertice^> vertice_ver;
+			for (auto& edge : edge_vec)
 			{
-				auto edge = edge_vec->GetAt(i);
-				if (vertice_ver->Size == vertices->Size)
+				if (vertice_ver.size() == vertices->Size)
 				{
 					edge->IsMst = false;
 				}
 				else
 				{
-					unsigned int e1, e2;
-					vertice_ver->IndexOf(edge->Vertice1, &e1);
-					vertice_ver->IndexOf(edge->Vertice2, &e2);
-					if (e1 != 0 && e2 != 0)
+					auto is_v1_missing = find(begin(vertice_ver), end(vertice_ver), edge->Vertice1) == end(vertice_ver);
+					auto is_v2_missing = find(begin(vertice_ver), end(vertice_ver), edge->Vertice2) == end(vertice_ver);
+					if (!is_v1_missing && !is_v2_missing)
 					{
 						edge->IsMst = false;
 					}
 					else
 					{
-						if (e1 == 0) { vertice_ver->Append(edge->Vertice1); }
-						if (e2 == 0) { vertice_ver->Append(edge->Vertice2); }
+						if (is_v1_missing) { vertice_ver.push_back(edge->Vertice1); }
+						if (is_v2_missing) { vertice_ver.push_back(edge->Vertice2); }
 						edge->IsMst = true;
 					}
 				}
@@ -141,28 +143,29 @@ namespace VsuCpp4
 		}
 		void OnVerticeVectorChanged(IObservableVector<Vertice^>^sender, IVectorChangedEventArgs ^event)
 		{
+			// TODO: set max id
 			RaiseCanExecuteChanged<RelayCommand>(RemoveVerticeCommand);
 		}
 		// Command Implementations
-		void OnAddVertice(Platform::Object^ parameter)
+		void OnAddVertice(Object^ parameter)
 		{
-			auto new_vertice = ref new Vertice(NewVerticeX, NewVerticeY, NewVerticeValue);
+			auto new_vertice = ref new Vertice(NewVerticeX, NewVerticeY, NewVerticeValue, max_vertice_id++);
 			vertices->Append(new_vertice);
 		}
-		bool CanAddEdge(Platform::Object^ parameter)
+		bool CanAddEdge(Object^ parameter)
 		{
 			return NewEdgeVertice1 != nullptr && NewEdgeVertice2 != nullptr && NewEdgeVertice1 != NewEdgeVertice2;
 		}
-		void OnAddEdge(Platform::Object^ parameter)
+		void OnAddEdge(Object^ parameter)
 		{
 			auto new_edge = ref new Edge(NewEdgeVertice1, NewEdgeVertice2, NewEdgeWeight);
 			edges->Append(new_edge);
 		}
-		bool CanRemoveVertice(Platform::Object^ parameter)
+		bool CanRemoveVertice(Object^ parameter)
 		{
 			return VerticeToRemove != nullptr;
 		}
-		void OnRemoveVertice(Platform::Object^ parameter)
+		void OnRemoveVertice(Object^ parameter)
 		{
 			for (unsigned int i = 0; i < edges->Size;)
 			{
@@ -179,11 +182,11 @@ namespace VsuCpp4
 			vertices->IndexOf(VerticeToRemove, &n);
 			vertices->RemoveAt(n);
 		}
-		bool CanRemoveEdge(Platform::Object^ parameter)
+		bool CanRemoveEdge(Object^ parameter)
 		{
 			return EdgeToRemove != nullptr;
 		}
-		void OnRemoveEdge(Platform::Object^ parameter)
+		void OnRemoveEdge(Object^ parameter)
 		{
 			RemoveEdge(EdgeToRemove);
 		}
@@ -193,42 +196,23 @@ namespace VsuCpp4
 			edges->IndexOf(edge, &n);
 			edges->RemoveAt(n);
 		}
-		void OnClear(Platform::Object^ parameter)
+		void OnClear(Object^ parameter)
 		{
 			edges->Clear();
 			vertices->Clear();
 		}
-		void OnOpen(Platform::Object^ parameter)
+		void OnOpen(Object^ parameter)
 		{
-			using namespace Windows::Storage;
-			auto picker = ref new Pickers::FileOpenPicker();
-			picker->SuggestedStartLocation = Pickers::PickerLocationId::DocumentsLibrary;
-			picker->FileTypeFilter->Append(".vsu");
-			auto pick_task = create_task(picker->PickSingleFileAsync());
-			pick_task.then([&](StorageFile^ file)
-			{
-				if (file != nullptr)
-				{
-					auto read_task = create_task(FileIO::ReadLinesAsync(file));
-					read_task.then([&](IVector<Platform::String^>^ lines)
-					{
-						for (auto&& line : lines)
-						{
-							wstring wline(line->Data());
-							// Add Vertices
-						}
-						for (auto&& line : lines)
-						{
-							wstring wline(line->Data());
-							// Add Edges
-						}
-					});
-				}
-			});
+			create_task(LoadGraphAsync());
 		}
-		void OnSaveAs(Platform::Object^ parameter);
+		void OnSaveAs(Object^ parameter)
+		{
+			create_task(SaveGraphAsync());
+		}
+		task<void> SaveGraphAsync();
+		task<void> LoadGraphAsync();
 		// INotifyPropertyChanged
-		template <typename T> void Set(T const& field, T const& value, Platform::String^ propertyName)
+		template <typename T> void Set(T const& field, T const& value, String^ propertyName)
 		{
 			if (field != value)
 			{
@@ -239,7 +223,7 @@ namespace VsuCpp4
 	public:
 		virtual event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ PropertyChanged;
 	protected:
-		virtual void NotifyPropertyChanged(Platform::String^ propertyName)
+		virtual void NotifyPropertyChanged(String^ propertyName)
 		{
 			PropertyChanged(this, ref new Windows::UI::Xaml::Data::PropertyChangedEventArgs(propertyName));
 		}

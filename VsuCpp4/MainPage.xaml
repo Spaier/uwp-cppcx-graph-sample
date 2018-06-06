@@ -104,7 +104,7 @@
                                 </TranslateTransform>
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <Line Stroke="{x:Bind IsMst, Converter={StaticResource BoolToColorConverter}}" StrokeThickness="5"
+                        <Line Stroke="{x:Bind IsMst, Mode=TwoWay, Converter={StaticResource BoolToColorConverter}}" StrokeThickness="5"
                               Opacity="0.5"
                               X1="{x:Bind Vertice1.X}" Y1="{x:Bind Vertice1.Y}"
                               X2="{x:Bind Vertice2.X}" Y2="{x:Bind Vertice2.Y}">
