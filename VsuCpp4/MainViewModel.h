@@ -147,16 +147,19 @@ namespace VsuCpp4
 					}
 				}
 			}
+			Edges->Clear();
+			for (auto& item : edge_vec)
+			{
+				Edges->Append(item);
+			}
 		}
 		// Events
 		void OnEdgeVectorChanged(IObservableVector<Edge^>^sender, IVectorChangedEventArgs ^event)
 		{
 			RaiseCanExecuteChanged<RelayCommand>(RemoveEdgeCommand);
-			OnMst();
 		}
 		void OnVerticeVectorChanged(IObservableVector<Vertice^>^sender, IVectorChangedEventArgs ^event)
 		{
-			// TODO: set max id
 			RaiseCanExecuteChanged<RelayCommand>(RemoveVerticeCommand);
 		}
 		// Command Implementations
@@ -173,6 +176,7 @@ namespace VsuCpp4
 		{
 			auto new_edge = ref new Edge(NewEdgeVertice1, NewEdgeVertice2, NewEdgeWeight);
 			edges->Append(new_edge);
+			OnMst();
 		}
 		bool CanRemoveVertice(Object^ parameter)
 		{
@@ -194,6 +198,7 @@ namespace VsuCpp4
 			unsigned int n;
 			vertices->IndexOf(VerticeToRemove, &n);
 			vertices->RemoveAt(n);
+			OnMst();
 		}
 		bool CanRemoveEdge(Object^ parameter)
 		{
@@ -208,6 +213,7 @@ namespace VsuCpp4
 			unsigned int n;
 			edges->IndexOf(edge, &n);
 			edges->RemoveAt(n);
+			OnMst();
 		}
 		void OnClear(Object^ parameter)
 		{
@@ -217,11 +223,11 @@ namespace VsuCpp4
 		{
 			edges->Clear();
 			vertices->Clear();
+			max_vertice_id = 0;
 		}
 		void OnOpen(Object^ parameter)
 		{
-			Clear();
-			auto load_task = create_task(LoadGraphAsync());
+			create_task(LoadGraphAsync());
 		}
 		void OnSaveAs(Object^ parameter)
 		{

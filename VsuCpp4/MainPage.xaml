@@ -95,15 +95,6 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="local:Edge">
                     <Grid>
-                        <TextBlock Text="{x:Bind Weight}" TextAlignment="Center"
-                                   FontSize="20" Foreground="NavajoWhite"
-                                   VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock.RenderTransform>
-                                <TranslateTransform 
-                                    X="{StaticResource VerticeDiameter}" Y="{StaticResource VerticeDiameter}">
-                                </TranslateTransform>
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
                         <Line Stroke="{x:Bind IsMst, Mode=TwoWay, Converter={StaticResource BoolToColorConverter}}" StrokeThickness="5"
                               Opacity="0.5"
                               X1="{x:Bind Vertice1.X}" Y1="{x:Bind Vertice1.Y}"

@@ -93,6 +93,7 @@ task<void> MainViewModel::LoadGraphAsync()
 	picker->FileTypeFilter->Append(".vsu");
 	auto file = co_await picker->PickSingleFileAsync();
 	if (file == nullptr) return;
+	Clear();
 	auto lines = co_await FileIO::ReadLinesAsync(file);
 	vector<vector<EdgeInfo^>> map_values;
 	for (auto&& line : lines)
@@ -131,4 +132,5 @@ task<void> MainViewModel::LoadGraphAsync()
 		}
 		i++;
 	}
+	OnMst();
 }
