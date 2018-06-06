@@ -20,6 +20,19 @@ namespace VsuCpp4
 		command->RaiseCanExecuteChanged();
 	}
 
+	public ref class EdgeInfo sealed
+	{
+	public:
+		EdgeInfo() { }
+		EdgeInfo(unsigned long long id, double weight)
+		{
+			Id = id;
+			Weight = weight;
+		}
+		property unsigned long long Id;
+		property double Weight;
+	};
+
 	[Windows::UI::Xaml::Data::Bindable]
 	public ref class MainViewModel sealed : Windows::UI::Xaml::Data::INotifyPropertyChanged
 	{
@@ -198,12 +211,17 @@ namespace VsuCpp4
 		}
 		void OnClear(Object^ parameter)
 		{
+			Clear();
+		}
+		void Clear()
+		{
 			edges->Clear();
 			vertices->Clear();
 		}
 		void OnOpen(Object^ parameter)
 		{
-			create_task(LoadGraphAsync());
+			Clear();
+			auto load_task = create_task(LoadGraphAsync());
 		}
 		void OnSaveAs(Object^ parameter)
 		{

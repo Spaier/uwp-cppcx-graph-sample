@@ -71,12 +71,12 @@ task<void> MainViewModel::SaveGraphAsync()
 	wstringstream stream;
 	for (auto&& vertice : vertices)
 	{
-		stream << vertice->Id << wstring(vertice->Value->Data()) << " " << vertice->X << " " << vertice->Y;
+		stream << vertice->Id << " " << wstring(vertice->Value->Data()) << " " << vertice->X << " " << vertice->Y;
 		for (auto&& edge : edges)
 		{
 			if (edge->Vertice1 == vertice)
 			{
-				stream << " " << edge->Vertice2->Id;
+				stream << " " << edge->Vertice2->Id << " " << edge->Weight;
 			}
 		}
 		stream << endl;
@@ -94,6 +94,7 @@ task<void> MainViewModel::LoadGraphAsync()
 	auto file = co_await picker->PickSingleFileAsync();
 	if (file == nullptr) return;
 	auto lines = co_await FileIO::ReadLinesAsync(file);
+	vector<vector<EdgeInfo^>> map_values;
 	for (auto&& line : lines)
 	{
 		wstringstream stream(line->Data());
@@ -103,5 +104,31 @@ task<void> MainViewModel::LoadGraphAsync()
 		double vertice_y;
 		stream >> vertice_id >> vertice_value >> vertice_x >> vertice_y;
 		auto vertice = ref new Vertice(vertice_x, vertice_y, ref new String(vertice_value.c_str()), vertice_id);
+		Vertices->Append(vertice);
+		auto current_edges = vector<EdgeInfo^>();
+		while (!stream.eof() && !stream.fail())
+		{
+			unsigned long long edge_id;
+			double edge_weight;
+			stream >> edge_id >> edge_weight;
+			current_edges.push_back(ref new EdgeInfo(edge_id, edge_weight));
+		}
+		map_values.push_back(current_edges);
+	}
+	vector<Vertice^> std_vertices(begin(Vertices), end(Vertices));
+	auto i = 0;
+	for (auto&& map_edges : map_values)
+	{
+		for (auto&& map_edge : map_edges)
+		{
+			auto vertice2 = find_if(begin(std_vertices), end(std_vertices),
+				[id = map_edge->Id](Vertice^ vertice) { return vertice->Id == id; });
+			if (vertice2 != end(std_vertices))
+			{
+				auto edge = ref new Edge(std_vertices[i], *vertice2, map_edge->Weight);
+				Edges->Append(edge);
+			}
+		}
+		i++;
 	}
 }

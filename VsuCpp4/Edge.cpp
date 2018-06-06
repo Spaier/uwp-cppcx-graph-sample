@@ -6,7 +6,7 @@ using namespace Platform;
 
 String^ Edge::Value::get()
 {
-	return Vertice1->Value + Vertice2->Value + Weight.ToString();
+	return Vertice1->Value + L" " + Vertice2->Value + L" " + Weight.ToString();
 }
 
 Edge::Edge(Vertice^ vertice1, Vertice^ vertice2, double weight)

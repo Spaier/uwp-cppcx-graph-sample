@@ -2,6 +2,7 @@
 
 namespace VsuCpp4
 {
+	using namespace Platform;
 	public ref class Vertice sealed
 	{
 	private:
@@ -14,10 +15,10 @@ namespace VsuCpp4
 				return id;
 			}
 		}
-		property Platform::String^ Value;
+		property String^ Value;
 		property double X;
 		property double Y;
-		Vertice(double x, double y, Platform::String^ value, unsigned long long id) : id(id)
+		Vertice(double x, double y, String^ value, unsigned long long id) : id(id)
 		{
 			X = x;
 			Y = y;
